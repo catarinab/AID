@@ -15,14 +15,14 @@ CREATE TABLE dim_airport (
 
 CREATE TABLE dim_airline (
     #base airport?
-    AIRLINE_ID INT,
+    AIRLINE_ID INT NOT NULL,
     AIRLINE_NAME VARCHAR(255),
     PRIMARY KEY (AIRLINE_ID)
 );
 
 CREATE TABLE dim_airplane (
     #capacity?
-    AIRPLANE_ID INT,
+    AIRPLANE_ID INT NOT NULL,
     TYPE_ID INT,
     AIRLINE_ID INT,
     PRIMARY KEY (AIRPLANE_ID),
@@ -30,7 +30,7 @@ CREATE TABLE dim_airplane (
 );
 
 CREATE TABLE dim_time (
-    TIME_ID DATETIME,
+    TIME_ID DATETIME NOT NULL,
     YEAR_ID INT,
     MONTH_ID INT,
     MONTH_NAME VARCHAR(255),
