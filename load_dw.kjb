@@ -382,7 +382,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
+      <xloc>304</xloc>
       <yloc>16</yloc>
       <attributes_kjc/>
     </entry>
@@ -421,7 +421,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
+      <xloc>400</xloc>
       <yloc>16</yloc>
       <attributes_kjc/>
     </entry>
@@ -460,7 +460,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>400</xloc>
+      <xloc>208</xloc>
       <yloc>16</yloc>
       <attributes_kjc/>
     </entry>
@@ -515,15 +515,6 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>dim_airport</from>
-      <to>dim_airline</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>dim_airline</from>
       <to>dim_airplane</to>
       <from_nr>0</from_nr>
@@ -533,7 +524,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>dim_airplane</from>
+      <from>dim_airport</from>
       <to>dim_time</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -543,6 +534,15 @@
     </hop>
     <hop>
       <from>dim_time</from>
+      <to>dim_airline</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>dim_airplane</from>
       <to>fact_flight</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>

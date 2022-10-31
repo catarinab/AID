@@ -13,6 +13,15 @@ CREATE TABLE dim_airport (
     PRIMARY KEY (AIRPORT_ID)
 );
 
+CREATE TABLE dim_time (
+    TIME_ID DATETIME NOT NULL,
+    YEAR_ID INT,
+    MONTH_ID INT,
+    MONTH_NAME VARCHAR(255),
+    DAY_ID INT,
+    PRIMARY KEY (TIME_ID)
+);
+
 CREATE TABLE dim_airline (
     #base airport?
     AIRLINE_ID INT NOT NULL,
@@ -27,15 +36,6 @@ CREATE TABLE dim_airplane (
     AIRLINE_ID INT,
     PRIMARY KEY (AIRPLANE_ID),
     FOREIGN KEY (AIRLINE_ID) REFERENCES dim_airline (AIRLINE_ID)
-);
-
-CREATE TABLE dim_time (
-    TIME_ID DATETIME NOT NULL,
-    YEAR_ID INT,
-    MONTH_ID INT,
-    MONTH_NAME VARCHAR(255),
-    DAY_ID INT,
-    PRIMARY KEY (TIME_ID)
 );
 
 CREATE TABLE fact_flight (
