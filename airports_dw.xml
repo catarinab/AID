@@ -50,21 +50,21 @@
         </Level>
       </Hierarchy>
     </Dimension>
-    <Dimension type="StandardDimension" visible="true" foreignKey="AIRLINE_ID" name="Airline">
+    <Dimension type="StandardDimension" visible="true" foreignKey="AIRLINE_ID" highCardinality="false" name="Airline">
       <Hierarchy name="Airline Hierarchy" visible="true" hasAll="true" allMemberName="All Airlines" primaryKey="AIRLINE_ID">
         <Table name="dim_airline">
         </Table>
-        <Level name="Airline Name" visible="true" column="AIRLINE_NAME" type="String" uniqueMembers="false" levelType="Regular">
+        <Level name="Airline Name" visible="true" column="AIRLINE_NAME" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
       </Hierarchy>
     </Dimension>
-    <Dimension type="StandardDimension" visible="true" foreignKey="AIRPLANE_ID" name="Airplane">
+    <Dimension type="StandardDimension" visible="true" foreignKey="AIRPLANE_ID" highCardinality="false" name="Airplane">
       <Hierarchy name="Airplane Hierarchy" visible="true" hasAll="true" allMemberName="All Airplanes" primaryKey="AIRPLANE_ID">
         <Table name="dim_airplane">
         </Table>
-        <Level name="Airline ID" visible="true" column="AIRLINE_ID" type="Integer" uniqueMembers="false" levelType="Regular">
+        <Level name="Type ID" visible="true" column="TYPE_ID" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
-        <Level name="Type ID" visible="true" column="TYPE_ID" type="Integer" uniqueMembers="false" levelType="Regular">
+        <Level name="Type Identifier" visible="true" column="TYPE_IDENTIFIER" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
       </Hierarchy>
     </Dimension>

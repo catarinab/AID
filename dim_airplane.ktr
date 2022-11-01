@@ -430,7 +430,7 @@
     <created_date>2022/10/29 19:26:04.956</created_date>
     <modified_user>-</modified_user>
     <modified_date>2022/10/29 19:26:04.956</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -569,6 +569,59 @@
     </hop>
   </order>
   <step>
+    <name>Insert / update</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>airports_dw</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>airports_dw</schema>
+      <table>dim_airplane</table>
+      <key>
+        <name>airplane_id</name>
+        <field>AIRPLANE_ID</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>AIRPLANE_ID</name>
+        <rename>airplane_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>TYPE_ID</name>
+        <rename>type_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>TYPE_IDENTIFIER</name>
+        <rename>identifier</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Table input</name>
     <type>TableInput</type>
     <description/>
@@ -583,8 +636,9 @@
     <sql>SELECT
   airplane_id
 , type_id
-, airline_id
-FROM airports.airplane
+, identifier
+FROM airports.airplane 
+NATURAL JOIN airports.airplane_type
 </sql>
     <limit>0</limit>
     <lookup/>
@@ -640,14 +694,14 @@ FROM airports.airplane
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
-        <type>Integer</type>
+        <type>String</type>
         <storagetype>normal</storagetype>
-        <name>airline_id</name>
-        <length>9</length>
-        <precision>0</precision>
+        <name>identifier</name>
+        <length>50</length>
+        <precision>-1</precision>
         <origin>Table input</origin>
-        <comments>airline_id</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
+        <comments>identifier</comments>
+        <conversion_Mask/>
         <decimal_symbol>.</decimal_symbol>
         <grouping_symbol>,</grouping_symbol>
         <currency_symbol/>
@@ -673,59 +727,6 @@ FROM airports.airplane
     </remotesteps>
     <GUI>
       <xloc>16</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Insert / update</name>
-    <type>InsertUpdate</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>airports_dw</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema>airports_dw</schema>
-      <table>dim_airplane</table>
-      <key>
-        <name>airplane_id</name>
-        <field>AIRPLANE_ID</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>AIRPLANE_ID</name>
-        <rename>airplane_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>TYPE_ID</name>
-        <rename>type_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>AIRLINE_ID</name>
-        <rename>airline_id</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
       <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>

@@ -431,7 +431,7 @@
     <created_date>2022/10/29 19:58:50.944</created_date>
     <modified_user>-</modified_user>
     <modified_date>2022/10/29 19:58:50.944</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -564,41 +564,94 @@
   </connection>
   <order>
     <hop>
-      <from>Table input 2</from>
-      <to>Sort rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Sort rows</from>
-      <to>Group by</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Table input</from>
-      <to>Select values</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Group by</from>
-      <to>Select values 2</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Select values</from>
-      <to>Join rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Select values 2</from>
-      <to>Join rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Join rows</from>
       <to>Insert / update</to>
       <enabled>Y</enabled>
     </hop>
   </order>
+  <step>
+    <name>Insert / update</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>airports_dw</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>airports_dw</schema>
+      <table>fact_flight</table>
+      <key>
+        <name>flight_id</name>
+        <field>FLIGHT_ID</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>FLIGHT_ID</name>
+        <rename>flight_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>ORIGIN_AIRPORT_ID</name>
+        <rename>from</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>DESTINATION_AIRPORT_ID</name>
+        <rename>to</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>DEPARTURE_TIME_ID</name>
+        <rename>departure</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>ARRIVAL_TIME_ID</name>
+        <rename>arrival</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>AIRLINE_ID</name>
+        <rename>airline_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>AIRPLANE_ID</name>
+        <rename>airplane_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>TOTAL_PASSENGERS</name>
+        <rename>total_passenger</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>TOTAL_REVENUE</name>
+        <rename>total_revenue</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Table input</name>
     <type>TableInput</type>
@@ -619,7 +672,15 @@
 , arrival
 , airline_id
 , airplane_id
-FROM airports.flight
+, total_passenger
+, total_revenue
+FROM airports.flight 
+NATURAL JOIN (
+	SELECT flight_id
+	, COUNT(booking_id) as total_passenger
+	, SUM(price) as total_revenue
+	FROM airports.booking 
+	GROUP BY flight_id) as measures
 </sql>
     <limit>0</limit>
     <lookup/>
@@ -789,343 +850,53 @@ FROM airports.flight
         <date_format_timezone>Europe/Lisbon</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
-    </row-meta>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>16</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table input 2</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>airports</connection>
-    <sql>SELECT
-  booking_id
-, flight_id
-, price
-FROM airports.booking
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cached_row_meta_active>N</cached_row_meta_active>
-    <row-meta>
       <value-meta>
         <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>booking_id</name>
-        <length>9</length>
-        <precision>0</precision>
-        <origin>Table input 2</origin>
-        <comments>booking_id</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol>,</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>Europe/Lisbon</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>flight_id</name>
-        <length>9</length>
-        <precision>0</precision>
-        <origin>Table input 2</origin>
-        <comments>flight_id</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol>,</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>Europe/Lisbon</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Number</type>
-        <storagetype>normal</storagetype>
-        <name>price</name>
-        <length>10</length>
-        <precision>2</precision>
-        <origin>Table input 2</origin>
-        <comments>price</comments>
-        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol>,</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>Europe/Lisbon</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-    </row-meta>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>16</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Sort rows</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>flight_id</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Group by</name>
-    <type>GroupBy</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <all_rows>N</all_rows>
-    <ignore_aggregate>N</ignore_aggregate>
-    <field_ignore/>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>grp</prefix>
-    <add_linenr>N</add_linenr>
-    <linenr_fieldname/>
-    <give_back_row>N</give_back_row>
-    <group>
-      <field>
-        <name>flight_id</name>
-      </field>
-    </group>
-    <fields>
-      <field>
-        <aggregate>total_passenger</aggregate>
-        <subject>booking_id</subject>
-        <type>COUNT_ALL</type>
-        <valuefield/>
-      </field>
-      <field>
-        <aggregate>total_revenue</aggregate>
-        <subject>price</subject>
-        <type>SUM</type>
-        <valuefield/>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join rows</name>
-    <type>JoinRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>flight_id_1</leftvalue>
-        <function>=</function>
-        <rightvalue>flight_id_2</rightvalue>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>400</xloc>
-      <yloc>64</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select values</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>flight_id</name>
-        <rename>flight_id_1</rename>
-      </field>
-      <field>
-        <name>from</name>
-        <rename/>
-      </field>
-      <field>
-        <name>to</name>
-        <rename/>
-      </field>
-      <field>
-        <name>departure</name>
-        <rename/>
-      </field>
-      <field>
-        <name>arrival</name>
-        <rename/>
-      </field>
-      <field>
-        <name>airline_id</name>
-        <rename/>
-      </field>
-      <field>
-        <name>airplane_id</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>304</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select values 2</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>flight_id</name>
-        <rename>flight_id_2</rename>
-      </field>
-      <field>
         <name>total_passenger</name>
-        <rename/>
-      </field>
-      <field>
+        <length>15</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>total_passenger</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol>,</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>en_US</date_format_locale>
+        <date_format_timezone>Europe/Lisbon</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
         <name>total_revenue</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
+        <length>32</length>
+        <precision>2</precision>
+        <origin>Table input</origin>
+        <comments>total_revenue</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>en_US</date_format_locale>
+        <date_format_timezone>Europe/Lisbon</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1135,91 +906,8 @@ FROM airports.booking
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Insert / update</name>
-    <type>InsertUpdate</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>airports_dw</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema>airports_dw</schema>
-      <table>fact_flight</table>
-      <key>
-        <name>flight_id_1</name>
-        <field>FLIGHT_ID</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>FLIGHT_ID</name>
-        <rename>flight_id_1</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ORIGIN_AIRPORT_ID</name>
-        <rename>from</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>DESTINATION_AIRPORT_ID</name>
-        <rename>to</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>DEPARTURE_TIME_ID</name>
-        <rename>departure</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ARRIVAL_TIME_ID</name>
-        <rename>arrival</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>AIRLINE_ID</name>
-        <rename>airline_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>AIRPLANE_ID</name>
-        <rename>airplane_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>TOTAL_PASSENGERS</name>
-        <rename>total_passenger</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>TOTAL_REVENUE</name>
-        <rename>total_revenue</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>64</yloc>
+      <xloc>16</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

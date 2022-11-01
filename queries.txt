@@ -1,0 +1,21 @@
+(1)
+
+SELECT NON EMPTY [Departure Time].Month.Members * {Measures.Passengers, Measures.Revenue} ON COLUMNS,
+    Airline.[Airline Name].Members ON ROWS 
+FROM Flights
+
+(2)
+
+SELECT [Arrival Time].Month.Members ON COLUMNS,
+    DESCENDANTS(TOPCOUNT([Destination Airport].Country.Members, 3, Measures.Passengers), 1, SELF_AND_BEFORE) ON ROWS 
+FROM Flights
+WHERE Measures.Passengers
+
+(3)
+
+WITH MEMBER Measures.[Average Revenue per Passenger] AS
+    (Measures.Revenue, Airline.[Airline Name].CurrentMember) / (Measures.Passengers, Airline.[Airline Name].CurrentMember)
+SELECT Measures.[Average Revenue per Passenger] ON COLUMNS,
+    ORDER(Airline.[Airline Name].Members, Measures.[Average Revenue per Passenger], DESC) ON ROWS 
+FROM Flights
+
